@@ -1,6 +1,7 @@
 import matplotlib.pylab as plt
 import numpy as np
 import nibabel as nib
+import os
 
 def imShow(*args):
     _, axes = plt.subplots(1,len(args))
@@ -11,7 +12,8 @@ def imShow(*args):
 
     return True
 
-dir = '/array/ssd/msmajdi/code/general/RigidRegistration/'
+# dir = '/array/ssd/msmajdi/code/general/RigidRegistration/'
+dir = '/media/data1/artin/code/general_Research/RigidRegistration/'
 
 im = nib.load(dir + 'origtemplate.nii.gz')
 msk = nib.load(dir + 'MyCrop_Template2_Gap20.nii.gz').get_data()
@@ -29,11 +31,11 @@ cropMask = tempMsk1 * tempMsk2 * tempMsk3
 sumMask = tempMsk1 + tempMsk2 + tempMsk3
 
 ind = 140
-imShow(im[...,ind] , sumMask[...,ind], cropMask[...,ind])
+imShow(im.get_data()[...,ind] , sumMask[...,ind], cropMask[...,ind])
 
-maskF2 = nib.Nifti1Image(cropMask,im.affine)
+maskF2 = nib.Nifti1Image(cropMask.astype(np.float32),im.affine)
 maskF2.get_header = im.header
-nib.save(maskF2,dir + 'CropMaskV3_symmetric.nii.gz' )
+nib.save(maskF2,dir + 'CropMaskV3.nii.gz' )
 
 # def funcNormalize(im):
 #     # return (im-im.mean())/im.std()
