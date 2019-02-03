@@ -1,23 +1,39 @@
 import matplotlib.pylab as plt
 import numpy as np
 import nibabel as nib
-import tifffile
 
+def imShow(*args):
+    _, axes = plt.subplots(1,len(args))
+    for ax, im in enumerate(args):
+        axes[ax].imshow(im,cmap='gray')
 
+    plt.show()
 
-dir = '/media/data1/artin/thomas/origtemplate.nii.gz'
-im = nib.load(dir)
+    return True
 
-mask = np.zeros(im.shape)
+dir = '/array/ssd/msmajdi/code/general/RigidRegistration/'
 
-gap = 20
-gap2 = 2
-mask[92-gap:126+gap,164-gap2:226+gap2, 105-gap:142+gap] = 1
+im = nib.load(dir + 'origtemplate.nii.gz')
+msk = nib.load(dir + 'MyCrop_Template2_Gap20.nii.gz').get_data()
+cord = tuple([range(83,176) , range(160,251) , range(95,151)])
 
-maskF2 = nib.Nifti1Image(mask,im.affine)
+tempMsk1 = np.zeros(im.shape) > 0
+tempMsk2 = np.zeros(im.shape) > 0
+tempMsk3 = np.zeros(im.shape) > 0
+
+tempMsk1[cord[0],:,:] = True
+tempMsk2[:,cord[1],:] = True
+tempMsk3[:,:,cord[2]] = True
+
+cropMask = tempMsk1 * tempMsk2 * tempMsk3
+sumMask = tempMsk1 + tempMsk2 + tempMsk3
+
+ind = 140
+imShow(im[...,ind] , sumMask[...,ind], cropMask[...,ind])
+
+maskF2 = nib.Nifti1Image(cropMask,im.affine)
 maskF2.get_header = im.header
-nib.save(maskF2,'/media/data1/artin/code/Thalamus_CNN/notMainCodes/RigidRegistration/MyCrop_Template2_Gap20.nii.gz' )
-
+nib.save(maskF2,dir + 'CropMaskV3_symmetric.nii.gz' )
 
 # def funcNormalize(im):
 #     # return (im-im.mean())/im.std()
