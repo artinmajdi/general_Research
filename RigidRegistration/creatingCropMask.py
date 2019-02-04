@@ -16,7 +16,7 @@ dir = '/array/ssd/msmajdi/code/general/RigidRegistration/'
 # dir = '/media/data1/artin/code/general_Research/RigidRegistration/'
 
 im = nib.load(dir + 'origtemplate.nii.gz')
-msk = nib.load(dir + 'MyCrop_Template2_Gap20.nii.gz').get_data()
+# msk = nib.load(dir + 'MyCrop_Template2_Gap20.nii.gz').get_data()
 cord = tuple([range(83,176) , range(160,251) , range(95,151)])
 
 tempMsk1 = np.zeros(im.shape) > 0
