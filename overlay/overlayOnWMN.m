@@ -2,18 +2,21 @@ close all;
 
 %Parameters
 slice = 30;
-dimension = 2;
+dimension = 3;
 transparency = 0.35;
-edgeTransparency = 0.5;
-rescaleFactor = 8;
+edgeTransparency = 0.8;
+rescaleFactor = 4;
 threshold = 0.3;
 
   
-stOverlays = {'1','2','4','6','7','8','9','10','12'};
+% fullIndexes = {'1','2','4','6','7','8','9','10','12'};
+fullIndexes = [1,2,4,5,6,7,8,9,10,11,12,13,14];
 
 startingDir = pwd;
-addpath('/media/data1/artin/overlay/');
-dataDir = '/media/data1/artin/overlay2/3T/';
+
+addpath('/media/data1/artin/code/general_Research/overlay/');
+addpath('/media/data1/artin/code/general_Research/overlay/NIfTI_20140122/')
+dataDir = '/media/data1/artin/overlay/';
 cd(dataDir);
 predSt = ['tm' , '.nii.gz'];
 % [f,p] = uigetfile('*.nii.gz','Multiselect','on');
@@ -120,7 +123,7 @@ for i = fullIndexes
     hColor = imshow(edgeColor);
     set(hColor,'AlphaData',colorMask);
 end
-
+saveas(gcf, [dataDir , plane, num2str(slice) , '.png'] )
 title(['Segmentation comparison: ',plane,' plane, slice ',num2str(slice)]);
 % axis tight;
 
